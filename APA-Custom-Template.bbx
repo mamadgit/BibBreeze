@@ -228,12 +228,12 @@
 \ExplSyntaxOn% This function is written using commands from the expl3 package and requires loading its own enviornment
 % Declare variables
 \seq_new:N \l_my_input_seq         % Sequence for input items
-\seq_new:N \l_my_location_list_seq      % Sequence for location  
 \tl_new:N \l_my_input_tl           % Token list for input string  
 \tl_new:N \l_my_item_tl            % Token list for current item  
 \tl_new:N \g_my_date_tl            % Token list for date  
 \tl_new:N \g_my_location_tl        % Token list for storing location parameters
 \tl_new:N \g_my_title_tl           % Token list for title  
+\seq_new:N \l_my_location_list_seq      % Sequence for location  
 \int_new:N \l_my_counter_int       % Integer variable as a counter
 \bool_new:N \l_my_continue_bool    % Boolean for while loop  
 \bool_new:N \l_my_nested_loop_bool % Boolean while loop for putting items in location sequence
@@ -445,39 +445,54 @@
     \PrintTitletl
     \setunit\newblock\addspace
     (\printfield{pages})\adddot%
-    \printfield{publisher}%  
+    \typeout{publisher:\thefield{publisher}}
+    \printfield{publisher}%
   }%
   \printfield{doi}%
 }
+\DeclareBibliographyAlias{mastersthesis}{thesis} % mastersthesis is recognized as a built-in type, thus can't override; use alias to thesis for custom driver formatting.
 
-\DeclareFieldFormat[phdthesis]{year}{(#1)}
-\DeclareFieldFormat[phdthesis]{title}{\textit{#1}}
-\DeclareIndexFieldFormat[phdthesis]{type}{(#1)}
-\DeclareIndexFieldFormat[phdthesis]{number}{(Publication No.\space #1)}
+\DeclareBibliographyAlias{phdthesis}{thesis} % phdthesis is recognized as a built-in type, thus can't override; use alias to thesis for custom driver formatting.
+\DeclareFieldFormat[thesis]{year}{(#1)}
+\DeclareFieldFormat[thesis]{title}{\textit{#1}}
+\DeclareIndexFieldFormat[thesis]{type}{(#1)}
+\DeclareIndexFieldFormat[thesis]{number}{(Publication No.\space #1)}
 
-\DeclareBibliographyDriver{phdthesis}
+\ExplSyntaxOn
+\NewDocumentCommand{\PopOneItem}{m}% A general function for extracting only the first item of a list
+{
+  \tl_set:Nx \l_tmpa_tl {\expandafter\use:n{#1}}
+  \seq_set_split:NnV \l_tmpa_seq {,} \l_tmpa_tl
+  \seq_pop_left:NN \l_tmpa_seq \l_tmpa_tl
+  \tl_trim_spaces:N \l_tmpa_tl
+  \tl_use:N \l_tmpa_tl
+}% Function also works for a list with only one item as there's nothing to split and the item is places in l_tmpa_tl
+\ExplSyntaxOff
+
+
+\DeclareBibliographyDriver{thesis}
 {%  
   \usebibmacro{bibindex}%  
   \printnames{author}% Print the author's name  
   \setunit*{\labelnamepunct}\newblock%  
   \printfield{year}% Print the year in parentheses  
   \newunit\newblock%  
-  \printfield{title}% Print the dissertation title  
-  \setunit{\addspace}%  
-  % Check if the thesis is unpublished or published  
-  \ifthenelse{\iffieldequalstr{type}{unpublished}}{% For unpublished theses  
-    {(\printfield{type})} % E.g., Unpublished doctoral dissertation  
-  }{%  
-    \printfield{number}% Publication number if published  
-    \addspace
-    \printfield{[type\addcomma institution]}% E.g., Doctoral dissertation  and University or institution  
-    \setunit{\addspace}\newblock  
-    \printfield{publisher}% Repository or publisher like Proquest  
-  }%  
-  \ifthenelse{\iffieldundef{institution}}{}{% Check if institution is defined  
-    {[\printfield{institution}]}% University or institution for published  
-  }%  
-  \finentry  
+  \printfield{title}% Print the dissertation title
+  \space
+  \ifthenelse{\equal{\thefield{type}}{phdthesis}} % Check if the entry type it's a PhD thesis
+  {%
+    [\printtext{Doctoral dissertation}\addcomma\space\printlist{institution}]% Print text alongside the institution. Also, the field institution is treated as a list. Thefore, to print it requires the command \printlist
+  }
+  {%
+    \ifthenelse{\equal{\thefield{type}}{mathesis}}% In BibLaTeX, the type of "mastersthesis" entries is "mathesis"
+      {%
+        [\printtext{Master's thesis}\addcomma\space\printlist{institution}]% Print text alongside the institution
+      }
+      {}% Do nothing if it's neither
+  }
+  \PopOneItem{\thefield{bibsource}} %Call function to just print the first item of bibsource
+  \newunit\newblock
+  \printfield{url}%
 }
 
 \ExecuteBibliographyOptions{labeldateparts=true, sorting=nyt, maxnames=20}
