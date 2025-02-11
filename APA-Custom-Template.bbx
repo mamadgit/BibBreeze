@@ -214,7 +214,7 @@
   % Set to ensure no line break before publisher
   %\setunit{\addspace}%
   \newunit%  
-  \printlist{publisher}%  
+  \printlist{publisher}%  Publisher requires the command \printlist not \printfield as it is a list
   \adddot%
   \printfield{doi}%   
 }
@@ -445,8 +445,8 @@
     \PrintTitletl
     \setunit\newblock\addspace
     (\printfield{pages})\adddot%
-    \typeout{publisher:\thefield{publisher}}
-    \printfield{publisher}%
+    \addspace
+    \printlist{publisher}\adddot%
   }%
   \printfield{doi}%
 }
