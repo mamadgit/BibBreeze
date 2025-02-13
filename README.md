@@ -11,6 +11,7 @@ This LaTeX template, written using BibLaTeX, provides a reliable solution for AP
   - Extracts and formats conference details (e.g., title, location, date) embedded in fields like `booktitle`.
   - Correctly places extracted data in the appropriate fields, minimizing manual editing.
 - **Designed for Academic Use**: Tailored for journals requiring numeric APA citations, offering a time-saving solution for academic writing.
+  - **Note:** Users wishing to use the standard APA style can do so with a few simple modifications, as explained in the `.tex` file.
 - **Seamless Integration**: Works effortlessly with LaTeX projects using BibLaTeX.
 
 ## Why This Template?
