@@ -38,6 +38,8 @@
 \usepackage{xparse}
 \usepackage[hidelinks]{hyperref}
 \usepackage[backend=biber, style=APA-Custom-Template, citestyle=numeric, datamodel=DataModel]{biblatex} 
+%Should users want non-numeric citations, they can use the line below instead. Make sure to change the the "numeric" inside \RequireBibliographyStyle line (second line) in the .bbx file to "standard". 
+%\usepackage[backend=biber, style=APA-Custom-Template, citestyle=author-year, datamodel=DataModel]{biblatex} 
 
 
 \addbibresource{Ref.bib}%Load the bibliography file
