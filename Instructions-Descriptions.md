@@ -8,7 +8,7 @@ This Markdown file provides descriptions of the reasons behind code implementati
 1. In the `APA-Custom-Template.tex` file, comment out the biblatex package on line 40 and use the biblatex package on line 42 instead.
 2. In the `APA-custom-Template.bbx` file, comment out line 2 and use line 3 instead.
 
-## customising-biblatex.def branch
+## Customising-BibLaTeX's.def-file branch
 Building the project requires a `.def` file. The purpose of this branch is to use the default (source) `biblatex.def` but modify it by integrating the contents of `APA-Custom-Template.def`. This is a temporary measure until I can decide which sections I require for my custom `.def` file. Once decided, I will load this custom `.def` in the `.tex` file and use it instead.
 
 **Instructions**:
