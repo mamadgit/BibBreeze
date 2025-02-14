@@ -3,7 +3,7 @@
 \DeclareDriverSourcemap[datatype=bibtex]
 {
   \map
-  {
+  {%
     %Various names that a bib entry may have for publication number of a thesis
     \step[fieldsource=pubnum,  match=\regexp{^\d{8}},   fieldtarget=publicationnumber]
     \step[fieldsource=pubno,  match=\regexp{^\d{8}},   fieldtarget=publicationnumber]
