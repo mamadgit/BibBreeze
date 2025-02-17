@@ -232,6 +232,7 @@
 \seq_new:N \l_my_input_seq         % Sequence for input items
 \tl_new:N \l_my_input_tl           % Token list for input string  
 \tl_new:N \l_my_item_tl            % Token list for current item  
+\tl_new:N \l_my_proceedings_tl     %Token list for holding string "proceedings"
 \tl_new:N \g_my_date_tl            % Token list for date  
 \tl_new:N \g_my_location_tl        % Token list for storing location parameters
 \tl_new:N \g_my_title_tl           % Token list for title  
@@ -245,9 +246,9 @@
 %%%%%%%The algorithm for extracting field information bundeled in another field
 \NewDocumentCommand{\ExtractFieldInfo}{m}
 {
-  \tl_set:Nx \l_my_input_tl {\expandafter\use:n{#1}}
-  \seq_set_split:NnV \l_my_input_seq {,} \l_my_input_tl
-  \seq_log:N \l_my_input_seq
+  \tl_set:Nx \l_my_input_tl {\expandafter\use:n{#1}}%Use \expandafter to acsses the characters of the input variable. Also use \tl_set:Nx to expand l_my_input_tl before passing to function.
+  \seq_set_split:NnV \l_my_input_seq {,} \l_my_input_tl %Split the list into items based on commas
+  \seq_log:N \l_my_input_seq %Check the log file for output of l_my_input_seq
 
   \bool_set_true:N \l_my_continue_bool
   %Set title, location and date as global tokens instead of local to acesses them outside ExtractFieldInfo
@@ -283,6 +284,8 @@
 
       \tl_if_eq:nVT {Proceedings} \l_my_item_tl
       {
+        %Store the string proceedings for later use
+        %\tl_set:Nn \l_my_proceedings_tl \l_my_item_tl
         % If it is Proceedings, pop the next item
         \seq_pop_right:NN \l_my_input_seq \l_my_item_tl
         \tl_trim_spaces:N \l_my_item_tl
@@ -432,6 +435,7 @@
   \setunit{\labelnamepunct}\newblock% 
   \printfield{title}% 
   \setunit{\labelnamepunct}\newblock% 
+  
   \ifnameundef{editor}%
   {
     \printtext{[Conference session]\adddot}%
