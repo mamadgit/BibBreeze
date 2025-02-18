@@ -299,7 +299,7 @@
         \tl_trim_spaces:N \l_my_item_tl
         
         % Check if the next item is a month
-        \regex_match:nVT { ^(January|February|March|April|May|June|July|August|September|October|November|December) } \l_my_item_tl 
+        \regex_match:nVT { ^(J|F|Mar|A|May|Jun|Jul|Aug|S|O|N|D) } \l_my_item_tl % High probability of month for \l_my_item_tl at this stage; minimal check is sufficent
         {
           \tl_gset:Nx \g_my_date_tl {\l_my_item_tl}
           \seq_pop_right:NN \l_my_input_seq \l_my_item_tl
@@ -405,6 +405,7 @@
       \tl_log:N \g_my_title_tl
     }
 }
+
 \ExplSyntaxOff
 
 \DeclareFieldFormat[inproceedings]{title}{%
@@ -434,8 +435,7 @@
   \printfield{year}% 
   \setunit{\labelnamepunct}\newblock% 
   \printfield{title}% 
-  \setunit{\labelnamepunct}\newblock% 
-  
+  \setunit{\labelnamepunct}\newblock
   \ifnameundef{editor}%
   {
     \printtext{[Conference session]\adddot}%
