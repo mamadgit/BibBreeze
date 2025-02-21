@@ -232,7 +232,6 @@
 \seq_new:N \l_my_input_seq         % Sequence for input items
 \tl_new:N \l_my_input_tl           % Token list for input string  
 \tl_new:N \l_my_item_tl            % Token list for current item  
-\tl_new:N \l_my_proceedings_tl     %Token list for holding string "proceedings"
 \tl_new:N \g_my_date_tl            % Token list for date  
 \tl_new:N \g_my_location_tl        % Token list for storing location parameters
 \tl_new:N \g_my_title_tl           % Token list for title  
@@ -284,8 +283,6 @@
 
       \tl_if_eq:nVT {Proceedings} \l_my_item_tl
       {
-        %Store the string proceedings for later use
-        %\tl_set:Nn \l_my_proceedings_tl \l_my_item_tl
         % If it is Proceedings, pop the next item
         \seq_pop_right:NN \l_my_input_seq \l_my_item_tl
         \tl_trim_spaces:N \l_my_item_tl
@@ -382,6 +379,7 @@
     {
       \addspace
       \tl_use:N \g_my_date_tl
+      \tl_log:N \g_my_date_tl
     }
 }
 \NewDocumentCommand{\PrintLocationtl}{}
@@ -392,6 +390,7 @@
       \ifnameundef{editor}
       {\tl_use:N \g_my_location_tl}
       {}
+      \tl_log:N \g_my_location_tl
     }
 }
 \NewDocumentCommand{\PrintTitletl}{}
@@ -406,6 +405,32 @@
     }
 }
 
+\cs_new_protected:Npn \ExtractURLInfo #1#2#3#4
+{
+  % Set biburl string
+  \str_set:Nx \l_url_str {#1}
+  \tl_log:N \l_url_str
+  % Split the biburl into segments
+  \seq_set_split:NnV \l_segments_seq {/} {\l_url_str}
+  \seq_log:N \l_segments_seq
+  % Initialize the found boolean
+  \bool_set_false:N \l_found_bool
+  % Map through each segment of the biburl
+  \seq_map_inline:Nn \l_segments_seq
+  {
+    \regex_match:nnTF {^#2\Z} {##1}
+    {
+      \bool_set_true:N \l_found_bool
+      \tl_log:n { Found~#2~in~segment:~##1 }
+      \seq_map_break:
+    }
+    {}% If regex not found, do nothing
+  }
+  % Execute the appropriate code based on whether the segment was found
+  \bool_if:NTF \l_found_bool
+  {#3}% If segment found, execute #3
+  {#4}% If not found, execute #4
+}
 \ExplSyntaxOff
 
 \DeclareFieldFormat[inproceedings]{title}{%
@@ -425,9 +450,29 @@
 \DeclareFieldFormat[inproceedings]{\PrintTitletl}{%
 #1
 }
+\NewDocumentCommand{\EditorMode}{}
+{
+  \printtext{In }%
+  \ifnameundef{editor}% In case edtior's field is missing.
+  {
+    \printtext{Find editors from publisher's source}
+  }
+  {
+    \printnames{editor}%
+  }
+  \ifnumgreater{\value{editor}}{1}% If there are multiple editors print Eds., if only one editor print Ed.
+  {\printtext{(Eds.),}}%
+  {\printtext{(Ed.),}}%
+  \PrintTitletl
+  \setunit\newblock\addspace
+  (\printfield{pages})\adddot%
+  \addspace
+  \printlist{publisher}\adddot%
+}
 % The format of how inproceeding papers should be printed in the references
 \DeclareBibliographyDriver{inproceedings}
 {%
+  \noindent
   \usebibmacro{bibindex}%
   \ExtractFieldInfo{\thefield{booktitle}}% Call the designed function first, to make the title (PrintTitletl), location (PrintLocationtl) and date (PrintDatetl) available
   \printnames{author}%  
@@ -435,24 +480,50 @@
   \printfield{year}% 
   \setunit{\labelnamepunct}\newblock% 
   \printfield{title}% 
-  \setunit{\labelnamepunct}\newblock
-  \ifnameundef{editor}%
+  \setunit{\labelnamepunct}\newblock%
+  \ifnameundef{editor}% Handles missing editor in incomplete BibTeX entries with conditional checks
   {
-    \printtext{[Conference session]\adddot}%
-    \PrintTitletl\addcomma
-    \PrintLocationtl\adddot
+    \iffieldundef{biburl}
+    {
+      \iffieldundef{isbn}
+      {\printtext{Find url from online source!}}% If a paper has neither the necessary ISBN nor biburl field, find the url online.
+      {\EditorMode}% Function EditorMode already accounts for non existing editor
+    }
+    {
+      %In case a journal article accidentally has an @inproceedings entry in bibtex. (it would be identified by "article" or "journals").
+      \ExtractURLInfo{\thefield{biburl}}{article}
+      {
+        \printtext{This is an article, find correct BibTeX reference}
+      }
+      {% If "article" not found, it's definetly a session
+        \ExtractURLInfo{\thefield{biburl}}{journals}
+        {
+          \printtext{This is an article, find correct BibTeX reference}
+        }
+        {% If "journals" not found, it's definetly a session
+          \printtext{[Paper presentation]\adddot}%
+          \PrintTitletl\addcomma
+          \PrintLocationtl\adddot
+        }%
+      }%
+    }%
   }
   {
-    \printtext{In }%
-    \printnames{editor}%
-    \ifnumgreater{\value{editor}}{1}% If there are multiple editors print Eds., if only one editor print Ed.
-    {\printtext{(Eds.),}}%
-    {\printtext{(Ed.),}}%
-    \PrintTitletl
-    \setunit\newblock\addspace
-    (\printfield{pages})\adddot%
-    \addspace
-    \printlist{publisher}\adddot%
+    \iffieldundef{biburl}
+    {
+      \iffieldundef{isbn}
+      {\printtext{Find url from online source!}}% If a paper has neither the necessary ISBN nor biburl field, find the url online.
+      {\EditorMode}% Function EditorMode already accounts for non existing editor
+    }
+    {
+      \ExtractURLInfo{\thefield{biburl}}{article}
+      {\printtext{This paper is considered an article, find correct BibTeX reference}}
+      {% If "article" not found, check for the regex "journals".
+        \ExtractURLInfo{\thefield{biburl}}{journals}
+        {\printtext{This paper is considered an article, find correct BibTeX reference}}
+        {\EditorMode}% If "article" and "journals" not found, the paper is definetly a proceedings and print editor mode.
+      }%
+    }%
   }%
   \printfield{doi}%
 }
