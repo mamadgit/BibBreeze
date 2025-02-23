@@ -486,19 +486,19 @@
     \iffieldundef{biburl}
     {
       \iffieldundef{isbn}
-      {\printtext{Find url from online source!}}% If a paper has neither the necessary ISBN nor biburl field, find the url online.
+      {\printtext{\textcolor[rgb]{0.545, 0.0, 0.0}Find url from online source!}}% If a paper has neither the necessary ISBN nor biburl field, find the url online.
       {\EditorMode}% Function EditorMode already accounts for non existing editor
     }
     {
       %In case a journal article accidentally has an @inproceedings entry in bibtex. (it would be identified by "article" or "journals").
       \ExtractURLInfo{\thefield{biburl}}{article}
       {
-        \printtext{This is an article, find correct BibTeX reference}
+        \printtext{\textcolor[rgb]{0.545, 0.0, 0.0}{This paper is an article, find correct BibTeX reference!}}
       }
       {% If "article" not found, it's definetly a session
         \ExtractURLInfo{\thefield{biburl}}{journals}
         {
-          \printtext{This is an article, find correct BibTeX reference}
+          \printtext{\textcolor[rgb]{0.545, 0.0, 0.0}{This paper is an article, find correct BibTeX reference!}}
         }
         {% If "journals" not found, it's definetly a session
           \printtext{[Paper presentation]\adddot}%
@@ -512,15 +512,15 @@
     \iffieldundef{biburl}
     {
       \iffieldundef{isbn}
-      {\printtext{Find url from online source!}}% If a paper has neither the necessary ISBN nor biburl field, find the url online.
+      {\printtext{\textcolor[rgb]{0.545, 0.0, 0.0}Find url from online source!}}% If a paper has neither the necessary ISBN nor biburl field, find the url online.
       {\EditorMode}% Function EditorMode already accounts for non existing editor
     }
     {
       \ExtractURLInfo{\thefield{biburl}}{article}
-      {\printtext{This paper is considered an article, find correct BibTeX reference}}
+      {\printtext{\textcolor[rgb]{0.545, 0.0, 0.0}{This paper is an article, find correct BibTeX reference!}}}%
       {% If "article" not found, check for the regex "journals".
         \ExtractURLInfo{\thefield{biburl}}{journals}
-        {\printtext{This paper is considered an article, find correct BibTeX reference}}
+        {\printtext{\textcolor[rgb]{0.695, 0.0, 0.0}{This paper is an article, find correct BibTeX reference!}}}%
         {\EditorMode}% If "article" and "journals" not found, the paper is definetly a proceedings and print editor mode.
       }%
     }%
