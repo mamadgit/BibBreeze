@@ -398,10 +398,11 @@
   \tl_if_empty:NF \g_my_title_tl
     {
       \addspace
-      \ifnameundef{editor}
+      \ifboolexpr{
+        test {\ifnameundef{editor}} and test {\iffieldundef{isbn}}% The isbn is included when a proceedings paper in an edited book lacks an editor field.
+      }
         {\tl_use:N \g_my_title_tl}
         {\textit{\tl_use:N \g_my_title_tl}}
-      \tl_log:N \g_my_title_tl
     }
 }
 
@@ -435,14 +436,14 @@
 
 \DeclareFieldFormat[inproceedings]{title}{%
   \ifboolexpr{
-    test {\ifnameundef{editor}}
+    test {\ifnameundef{editor}} and test {\iffieldundef{isbn}}
   }
   {\textit{#1}}
   {#1}
 }
 \DeclareFieldFormat[inproceedings]{year}{%
   \ifboolexpr{
-    test {\ifnameundef{editor}}
+    test {\ifnameundef{editor}} and test {\iffieldundef{isbn}}
   }
   {(#1,\space \PrintDatetl)}
   {(#1)}
@@ -452,10 +453,16 @@
 }
 \NewDocumentCommand{\EditorMode}{}
 {
+  \hspace*{-9pt}\printnames{author}%  
+  \setunit{\labelnamepunct}\newblock%  
+  \printfield{year}% 
+  \setunit{\labelnamepunct}\newblock% 
+  \printfield{title}% 
+  \setunit{\labelnamepunct}\newblock%
   \printtext{In }%
   \ifnameundef{editor}% In case edtior's field is missing.
   {
-    \printtext{Find editors from publisher's source}
+    \printtext{\textcolor[rgb]{0.545, 0.0, 0.0}{Find editors from publisher's source}}
   }
   {
     \printnames{editor}%
@@ -468,6 +475,7 @@
   (\printfield{pages})\adddot%
   \addspace
   \printlist{publisher}\adddot%
+  \printfield{doi}%
 }
 % The format of how inproceeding papers should be printed in the references
 \DeclareBibliographyDriver{inproceedings}
@@ -475,35 +483,36 @@
   \noindent
   \usebibmacro{bibindex}%
   \ExtractFieldInfo{\thefield{booktitle}}% Call the designed function first, to make the title (PrintTitletl), location (PrintLocationtl) and date (PrintDatetl) available
-  \printnames{author}%  
-  \setunit{\labelnamepunct}\newblock%  
-  \printfield{year}% 
-  \setunit{\labelnamepunct}\newblock% 
-  \printfield{title}% 
-  \setunit{\labelnamepunct}\newblock%
   \ifnameundef{editor}% Handles missing editor in incomplete BibTeX entries with conditional checks
   {
     \iffieldundef{biburl}
     {
       \iffieldundef{isbn}
-      {\printtext{\textcolor[rgb]{0.545, 0.0, 0.0}Find url from online source!}}% If a paper has neither the necessary ISBN nor biburl field, find the url online.
+      {\hspace{-5pt}\printtext{\textcolor[rgb]{0.545, 0.0, 0.0}{Find biburl from online source (address bar)!}}}% If a paper has neither the necessary ISBN nor biburl field, find the url online.
       {\EditorMode}% Function EditorMode already accounts for non existing editor
     }
     {
       %In case a journal article accidentally has an @inproceedings entry in bibtex. (it would be identified by "article" or "journals").
       \ExtractURLInfo{\thefield{biburl}}{article}
       {
-        \printtext{\textcolor[rgb]{0.545, 0.0, 0.0}{This paper is an article, find correct BibTeX reference!}}
+        \hspace{-5pt}\printtext{\textcolor[rgb]{0.545, 0.0, 0.0}{This paper is an article, find correct BibTeX reference!}}
       }
       {% If "article" not found, it's definetly a session
         \ExtractURLInfo{\thefield{biburl}}{journals}
         {
-          \printtext{\textcolor[rgb]{0.545, 0.0, 0.0}{This paper is an article, find correct BibTeX reference!}}
+          \hspace{-5pt}\printtext{\textcolor[rgb]{0.545, 0.0, 0.0}{This paper is an article, find correct BibTeX reference!}}
         }
         {% If "journals" not found, it's definetly a session
+          \hspace*{-8pt}\printnames{author}%  
+          \setunit{\labelnamepunct}\newblock%  
+          \printfield{year}% 
+          \setunit{\labelnamepunct}\newblock% 
+          \printfield{title}% 
+          \setunit{\labelnamepunct}\newblock%
           \printtext{[Paper presentation]\adddot}%
           \PrintTitletl\addcomma
           \PrintLocationtl\adddot
+          \printfield{doi}%
         }%
       }%
     }%
@@ -512,20 +521,19 @@
     \iffieldundef{biburl}
     {
       \iffieldundef{isbn}
-      {\printtext{\textcolor[rgb]{0.545, 0.0, 0.0}Find url from online source!}}% If a paper has neither the necessary ISBN nor biburl field, find the url online.
+      {\hspace{-5pt}\printtext{\textcolor[rgb]{0.545, 0.0, 0.0}{Find biburl from online source (address bar)!}}}% If a paper has neither the necessary ISBN nor biburl field, find the url online.
       {\EditorMode}% Function EditorMode already accounts for non existing editor
     }
     {
       \ExtractURLInfo{\thefield{biburl}}{article}
-      {\printtext{\textcolor[rgb]{0.545, 0.0, 0.0}{This paper is an article, find correct BibTeX reference!}}}%
+      {\hspace{-5pt}\printtext{\textcolor[rgb]{0.545, 0.0, 0.0}{This paper is an article, find correct BibTeX reference!}}}%
       {% If "article" not found, check for the regex "journals".
         \ExtractURLInfo{\thefield{biburl}}{journals}
-        {\printtext{\textcolor[rgb]{0.695, 0.0, 0.0}{This paper is an article, find correct BibTeX reference!}}}%
+        {\hspace{-5pt}\printtext{\textcolor[rgb]{0.695, 0.0, 0.0}{This paper is an article, find correct BibTeX reference!}}}%
         {\EditorMode}% If "article" and "journals" not found, the paper is definetly a proceedings and print editor mode.
       }%
     }%
   }%
-  \printfield{doi}%
 }
 \DeclareBibliographyAlias{mastersthesis}{thesis} % mastersthesis is recognized as a built-in type, thus can't override; use alias to thesis for custom driver formatting.
 
