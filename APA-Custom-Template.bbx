@@ -245,9 +245,9 @@
 %%%%%%%The algorithm for extracting field information bundeled in another field
 \NewDocumentCommand{\ExtractFieldInfo}{m}
 {
-  \tl_set:Nx \l_my_input_tl {\expandafter\use:n{#1}}
-  \seq_set_split:NnV \l_my_input_seq {,} \l_my_input_tl
-  \seq_log:N \l_my_input_seq
+  \tl_set:Nx \l_my_input_tl {\expandafter\use:n{#1}}%Use \expandafter to acsses the characters of the input variable. Also use \tl_set:Nx to expand l_my_input_tl before passing to function.
+  \seq_set_split:NnV \l_my_input_seq {,} \l_my_input_tl %Split the list into items based on commas
+  \seq_log:N \l_my_input_seq %Check the log file for output of l_my_input_seq
 
   \bool_set_true:N \l_my_continue_bool
   %Set title, location and date as global tokens instead of local to acesses them outside ExtractFieldInfo
@@ -296,7 +296,7 @@
         \tl_trim_spaces:N \l_my_item_tl
         
         % Check if the next item is a month
-        \regex_match:nVT { ^(January|February|March|April|May|June|July|August|September|October|November|December) } \l_my_item_tl 
+        \regex_match:nVT { ^(J|F|Mar|A|May|Jun|Jul|Aug|S|O|N|D) } \l_my_item_tl % High probability of month for \l_my_item_tl at this stage; minimal check is sufficent
         {
           \tl_gset:Nx \g_my_date_tl {\l_my_item_tl}
           \seq_pop_right:NN \l_my_input_seq \l_my_item_tl
@@ -379,6 +379,7 @@
     {
       \addspace
       \tl_use:N \g_my_date_tl
+      \tl_log:N \g_my_date_tl
     }
 }
 \NewDocumentCommand{\PrintLocationtl}{}
@@ -389,6 +390,7 @@
       \ifnameundef{editor}
       {\tl_use:N \g_my_location_tl}
       {}
+      \tl_log:N \g_my_location_tl
     }
 }
 \NewDocumentCommand{\PrintTitletl}{}
@@ -396,24 +398,52 @@
   \tl_if_empty:NF \g_my_title_tl
     {
       \addspace
-      \ifnameundef{editor}
+      \ifboolexpr{
+        test {\ifnameundef{editor}} and test {\iffieldundef{isbn}}% The isbn is included when a proceedings paper in an edited book lacks an editor field.
+      }
         {\tl_use:N \g_my_title_tl}
         {\textit{\tl_use:N \g_my_title_tl}}
-      \tl_log:N \g_my_title_tl
     }
+}
+
+\cs_new_protected:Npn \ExtractURLInfo #1#2#3#4
+{
+  % Set biburl string
+  \str_set:Nx \l_url_str {#1}
+  \tl_log:N \l_url_str
+  % Split the biburl into segments
+  \seq_set_split:NnV \l_segments_seq {/} {\l_url_str}
+  \seq_log:N \l_segments_seq
+  % Initialize the found boolean
+  \bool_set_false:N \l_found_bool
+  % Map through each segment of the biburl
+  \seq_map_inline:Nn \l_segments_seq
+  {
+    \regex_match:nnTF {^#2\Z} {##1}
+    {
+      \bool_set_true:N \l_found_bool
+      \tl_log:n { Found~#2~in~segment:~##1 }
+      \seq_map_break:
+    }
+    {}% If regex not found, do nothing
+  }
+  % Execute the appropriate code based on whether the segment was found
+  \bool_if:NTF \l_found_bool
+  {#3}% If segment found, execute #3
+  {#4}% If not found, execute #4
 }
 \ExplSyntaxOff
 
 \DeclareFieldFormat[inproceedings]{title}{%
   \ifboolexpr{
-    test {\ifnameundef{editor}}
+    test {\ifnameundef{editor}} and test {\iffieldundef{isbn}}
   }
   {\textit{#1}}
   {#1}
 }
 \DeclareFieldFormat[inproceedings]{year}{%
   \ifboolexpr{
-    test {\ifnameundef{editor}}
+    test {\ifnameundef{editor}} and test {\iffieldundef{isbn}}
   }
   {(#1,\space \PrintDatetl)}
   {(#1)}
@@ -421,36 +451,90 @@
 \DeclareFieldFormat[inproceedings]{\PrintTitletl}{%
 #1
 }
-% The format of how inproceeding papers should be printed in the references
-\DeclareBibliographyDriver{inproceedings}
-{%
-  \usebibmacro{bibindex}%
-  \ExtractFieldInfo{\thefield{booktitle}}% Call the designed function first, to make the title (PrintTitletl), location (PrintLocationtl) and date (PrintDatetl) available
-  \printnames{author}%  
+\NewDocumentCommand{\EditorMode}{}
+{
+  \hspace*{-9pt}\printnames{author}%  
   \setunit{\labelnamepunct}\newblock%  
   \printfield{year}% 
   \setunit{\labelnamepunct}\newblock% 
   \printfield{title}% 
-  \setunit{\labelnamepunct}\newblock% 
-  \ifnameundef{editor}%
+  \setunit{\labelnamepunct}\newblock%
+  \printtext{In }%
+  \ifnameundef{editor}% In case edtior's field is missing.
+  {%
+    \printtext{\textcolor[rgb]{0.695, 0.0, 0.0}{Find editors from publisher's source}}
+    \addspace%
+  }%
+  {%
+    \printnames{editor}%
+  }%
+  \ifnumgreater{\value{editor}}{1}% If there are multiple editors print Eds., if only one editor print Ed.
+  {\printtext{(Eds.),}}%
+  {\printtext{(Ed.),}}%
+  \PrintTitletl
+  \setunit\newblock\addspace
+  (\printfield{pages})\adddot%
+  \addspace
+  \printlist{publisher}\adddot%
+  \printfield{doi}%
+}
+% The format of how inproceeding papers should be printed in the references
+\DeclareBibliographyDriver{inproceedings}
+{%
+  \noindent
+  \usebibmacro{bibindex}%
+  \ExtractFieldInfo{\thefield{booktitle}}% Call the designed function first, to make the title (PrintTitletl), location (PrintLocationtl) and date (PrintDatetl) available
+  \ifnameundef{editor}% Handles missing editor in incomplete BibTeX entries with conditional checks
   {
-    \printtext{[Conference session]\adddot}%
-    \PrintTitletl\addcomma
-    \PrintLocationtl\adddot
+    \iffieldundef{biburl}
+    {
+      \iffieldundef{isbn}
+      {\hspace{-5pt}\printtext{\textcolor[rgb]{0.695, 0.0, 0.0}{Find biburl from online source (address bar)!}}}% If a paper has neither the necessary ISBN nor biburl field, find the url online.
+      {\EditorMode}% Function EditorMode already accounts for non existing editor
+    }
+    {
+      %In case a journal article accidentally has an @inproceedings entry in bibtex. (it would be identified by "article" or "journals").
+      \ExtractURLInfo{\thefield{biburl}}{article}
+      {
+        \hspace{-5pt}\printtext{\textcolor[rgb]{0.695, 0.0, 0.0}{This paper is an article, find correct BibTeX reference!}}
+      }
+      {% If "article" not found, it's definetly a session
+        \ExtractURLInfo{\thefield{biburl}}{journals}
+        {
+          \hspace{-5pt}\printtext{\textcolor[rgb]{0.695, 0.0, 0.0}{This paper is an article, find correct BibTeX reference!}}
+        }
+        {% If "journals" not found, it's definetly a session
+          \hspace*{-8pt}\printnames{author}%  
+          \setunit{\labelnamepunct}\newblock%  
+          \printfield{year}% 
+          \setunit{\labelnamepunct}\newblock% 
+          \printfield{title}% 
+          \setunit{\labelnamepunct}\newblock%
+          \printtext{[Paper presentation]\adddot}%
+          \PrintTitletl\addcomma
+          \PrintLocationtl\adddot
+          \printfield{doi}%
+        }%
+      }%
+    }%
   }
   {
-    \printtext{In }%
-    \printnames{editor}%
-    \ifnumgreater{\value{editor}}{1}% If there are multiple editors print Eds., if only one editor print Ed.
-    {\printtext{(Eds.),}}%
-    {\printtext{(Ed.),}}%
-    \PrintTitletl
-    \setunit\newblock\addspace
-    (\printfield{pages})\adddot%
-    \addspace
-    \printlist{publisher}\adddot%
+    \iffieldundef{biburl}
+    {
+      \iffieldundef{isbn}
+      {\hspace{-5pt}\printtext{\textcolor[rgb]{0.695, 0.0, 0.0}{Find biburl from online source (address bar)!}}}% If a paper has neither the necessary ISBN nor biburl field, find the url online.
+      {\EditorMode}% Function EditorMode already accounts for non existing editor
+    }
+    {
+      \ExtractURLInfo{\thefield{biburl}}{article}
+      {\hspace{-5pt}\printtext{\textcolor[rgb]{0.695, 0.0, 0.0}{This paper is an article, find correct BibTeX reference!}}}%
+      {% If "article" not found, check for the regex "journals".
+        \ExtractURLInfo{\thefield{biburl}}{journals}
+        {\hspace{-5pt}\printtext{\textcolor[rgb]{0.695, 0.0, 0.0}{This paper is an article, find correct BibTeX reference!}}}%
+        {\EditorMode}% If "article" and "journals" not found, the paper is definetly a proceedings and print editor mode.
+      }%
+    }%
   }%
-  \printfield{doi}%
 }
 \DeclareBibliographyAlias{mastersthesis}{thesis} % mastersthesis is recognized as a built-in type, thus can't override; use alias to thesis for custom driver formatting.
 
@@ -480,12 +564,7 @@
   \printfield{year}% Print the year in parentheses  
   \newunit\newblock%  
   \printfield{title}% Print the dissertation title
-  %check for url
-  \iffieldundef{url}
-  {
-    \printtext{(Publication No.\space \thefield{publicationnumber})}%If URl is not present, then the thesis is on a database. Therefore print its publication number.
-  }
-  {} %Do nothing if there's no URL and contine
+  \space
   \ifthenelse{\equal{\thefield{type}}{phdthesis}} % Check if the entry type it's a PhD thesis
   {%
     [\printtext{Doctoral dissertation}\addcomma\space\printlist{institution}]% Print text alongside the institution. Also, the field institution is treated as a list. Thefore, to print it requires the command \printlist
@@ -500,7 +579,6 @@
   \PopOneItem{\thefield{bibsource}} %Call function to just print the first item of bibsource
   \newunit\newblock
   \printfield{url}%
-  \finentry
 }
 
 \ExecuteBibliographyOptions{labeldateparts=true, sorting=nyt, maxnames=20}
