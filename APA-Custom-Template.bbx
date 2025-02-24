@@ -461,12 +461,13 @@
   \setunit{\labelnamepunct}\newblock%
   \printtext{In }%
   \ifnameundef{editor}% In case edtior's field is missing.
-  {
-    \printtext{\textcolor[rgb]{0.545, 0.0, 0.0}{Find editors from publisher's source}}
-  }
-  {
+  {%
+    \printtext{\textcolor[rgb]{0.695, 0.0, 0.0}{Find editors from publisher's source}}%
+    \addspace%
+  }%
+  {%
     \printnames{editor}%
-  }
+  }%
   \ifnumgreater{\value{editor}}{1}% If there are multiple editors print Eds., if only one editor print Ed.
   {\printtext{(Eds.),}}%
   {\printtext{(Ed.),}}%
@@ -488,19 +489,19 @@
     \iffieldundef{biburl}
     {
       \iffieldundef{isbn}
-      {\hspace{-5pt}\printtext{\textcolor[rgb]{0.545, 0.0, 0.0}{Find biburl from online source (address bar)!}}}% If a paper has neither the necessary ISBN nor biburl field, find the url online.
+      {\hspace{-5pt}\printtext{\textcolor[rgb]{0.695, 0.0, 0.0}{Find biburl from online source (address bar)!}}}% If a paper has neither the necessary ISBN nor biburl field, find the url online.
       {\EditorMode}% Function EditorMode already accounts for non existing editor
     }
     {
       %In case a journal article accidentally has an @inproceedings entry in bibtex. (it would be identified by "article" or "journals").
       \ExtractURLInfo{\thefield{biburl}}{article}
       {
-        \hspace{-5pt}\printtext{\textcolor[rgb]{0.545, 0.0, 0.0}{This paper is an article, find correct BibTeX reference!}}
+        \hspace{-5pt}\printtext{\textcolor[rgb]{0.695, 0.0, 0.0}{This paper is an article, find correct BibTeX reference!}}
       }
       {% If "article" not found, it's definetly a session
         \ExtractURLInfo{\thefield{biburl}}{journals}
         {
-          \hspace{-5pt}\printtext{\textcolor[rgb]{0.545, 0.0, 0.0}{This paper is an article, find correct BibTeX reference!}}
+          \hspace{-5pt}\printtext{\textcolor[rgb]{0.695, 0.0, 0.0}{This paper is an article, find correct BibTeX reference!}}
         }
         {% If "journals" not found, it's definetly a session
           \hspace*{-8pt}\printnames{author}%  
@@ -521,12 +522,12 @@
     \iffieldundef{biburl}
     {
       \iffieldundef{isbn}
-      {\hspace{-5pt}\printtext{\textcolor[rgb]{0.545, 0.0, 0.0}{Find biburl from online source (address bar)!}}}% If a paper has neither the necessary ISBN nor biburl field, find the url online.
+      {\hspace{-5pt}\printtext{\textcolor[rgb]{0.695, 0.0, 0.0}{Find biburl from online source (address bar)!}}}% If a paper has neither the necessary ISBN nor biburl field, find the url online.
       {\EditorMode}% Function EditorMode already accounts for non existing editor
     }
     {
       \ExtractURLInfo{\thefield{biburl}}{article}
-      {\hspace{-5pt}\printtext{\textcolor[rgb]{0.545, 0.0, 0.0}{This paper is an article, find correct BibTeX reference!}}}%
+      {\hspace{-5pt}\printtext{\textcolor[rgb]{0.695, 0.0, 0.0}{This paper is an article, find correct BibTeX reference!}}}%
       {% If "article" not found, check for the regex "journals".
         \ExtractURLInfo{\thefield{biburl}}{journals}
         {\hspace{-5pt}\printtext{\textcolor[rgb]{0.695, 0.0, 0.0}{This paper is an article, find correct BibTeX reference!}}}%
