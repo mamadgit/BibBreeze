@@ -17,7 +17,7 @@
 % \namepart<namepart>  - e.g. \namepartfamily
 % \namepart<namepart>i - e.g. \namepartfamilyi
 \def\do#1{%
-  \csdef{mkbibname#1}##1{##1}%
+  \csdef{mkbibname#1}##1{##1}%%
   \blx@kv@defkey{blx@opt@namepart}{#1}{\csdef{namepart#1}{##1}}%
   \blx@kv@defkey{blx@opt@namepart}{#1i}{\csdef{namepart#1i}{##1}}%
   \blx@kv@defkey{blx@opt@namepart}{#1un}{\csdef{namepart#1un}{##1}}}
