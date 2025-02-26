@@ -2,7 +2,7 @@
 A LaTeX template for APA-style referencing with numeric in-text citations, fully compliant with APA 7th edition standards and featuring advanced automation for citation data processing.
 
 ## Note
-For information regarding the details and purpose of the branches of this repository, please read the `Instructions-Descriptions.md` markdown file.
+For information regarding the details and purpose of the branches of this repository, please read the `Instructions-Descriptions.md` markdown file. Also, to see the output and capabilities of this package please look at the `APA-Custom_LaTeX-Template.pdf` as an example.
 
 ## Introduction
 This LaTeX template, written using BibLaTeX, provides a reliable solution for APA-style referencing (7th edition) with numeric in-text citations, a format required by some academic journals. Designed for researchers, students, and academics, it ensures strict adherence to APA standards while significantly reducing manual effort through intelligent automation regarding unorganised bibliography data. It is compatible with MikTeX installations for Windows users, as well as other LaTeX distributions.
