@@ -12,7 +12,7 @@ This Markdown file provides descriptions of the reasons behind code implementati
 Building the project requires a `.def` file. The purpose of this branch is to use the default (source) `biblatex.def` but modify it by integrating the contents of `APA-Custom-Template.def`. This is a temporary measure until I can decide which sections I require for my `APA-Custom-Template.def` file. Once decided, I will load the `APA-Custom-Template.def` in the `.tex` file and use it instead.
 
 **Instructions**:
-1. **Replace the Modified `biblatex.def`**: Locate the modified `biblatex.def` in your installation path and replace it with the original version.
+1. **Replace the original `biblatex.def`**: Locate the original `biblatex.def` in your installation path and replace it with the modified `biblatex.def` presented on this repository.
 2. **For MikTeX Users**:
    - Navigate to your user-specific MikTeX installation directory:
      - On Windows, this is typically found in:
@@ -22,8 +22,11 @@ Building the project requires a `.def` file. The purpose of this branch is to us
    - Here, `[Your Username]` represents your actual Windows username.
    - Copy the original `biblatex.def` from your source or backup location to this path.
    - Ensure you have administrative privileges to write to this directory or run your text editor as an administrator.
-
+     
+Or if you'd prefer another method:
+- Copy the contents of `APA-Custom-Template.def` **from line 5 to line 16**. Locate the original `biblatex.def` in your installation path and add the copied content to the macro `DeclareDriverSourccemap` on **line 1339**.
+- 
 Remember, modifying system files like `biblatex.def` can affect other LaTeX documents you work on, so backup your current `biblatex.def` before making changes.
 
 ## Detailed-Explanation-of-Code branch
-In this branch a detailed explanation of the main algorithms that make this APA referencing package unique have been explained. Furthermore, the key innovations have been listed.
+In this branch a detailed explanation of the main algorithms that make this APA referencing package unique has been explained. Furthermore, the key innovations have been listed.
