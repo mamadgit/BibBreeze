@@ -25,5 +25,5 @@ Building the project requires a `.def` file. The purpose of this branch is to us
 
 Remember, modifying system files like `biblatex.def` can affect other LaTeX documents you work on, so backup your current `biblatex.def` before making changes.
 
-## BibLaTeX Template for Automating Bibliography Data for the APA Referencing Style branch
+## Detailed Explanation of Code branch
 In this branch a detailed explanation of the main algorithms that make this APA referencing package unique have been explained. Furthermore, the key innovations have been listed.
