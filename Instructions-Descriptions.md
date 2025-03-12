@@ -2,7 +2,7 @@
 This Markdown file provides descriptions of the reasons behind code implementations in various branches, including the main branch. For sections of code that require manual setup, this document will offer precise instructions on what to do.
 
 ## Main Branch
-**Standard APA style**: The code allows for the APA style to be used with `numeric` in-text citations and the `authoryear` version.
+**Standard APA style**: The code allows for the APA style to be used with `numeric` in-text citations and the `author-year` version. To use `author-year` in-text citations please follow the instructions below.
 
 **Instructions**:
 
@@ -16,8 +16,8 @@ For MikTeX users:
      
    - Or if you'd prefer another method:
      Copy the contents of `APA-Custom-Template.cbx` into the default `authoryear.cbx` right after line 8 (`\newbool{cbx:parens}`).
-2. In the `APA-Custom-Template.tex` file, comment out the biblatex package on line 40 and use the biblatex package on line 42 instead.
-3. In the `APA-custom-Template.bbx` file, comment out line 2 and use line 3 instead.
+2. In the `APA-Custom-Template.tex` file, set the `citestyle` of the `documentclass` to `authoryear`.
+3. In the `APA-custom-Template.bbx` file, set the `numeric` of `RequireBibliographyStyle` as `authoryear`.
 
 ## Customising-BibLaTeX's.def-file branch
 Building the project requires a `.def` file. The purpose of this branch is to use the default (source) `biblatex.def` but modify it by integrating the contents of `APA-Custom-Template.def`. This is a temporary measure until I can decide which sections I require for my `APA-Custom-Template.def` file. Once decided, I will load the `APA-Custom-Template.def` in the `.tex` file and use it instead.
