@@ -1,0 +1,23 @@
+\renewcommand*{\nameyeardelim}{,\space} % Adds ", " between authors and year
+\DeclareNameFormat{labelname}{%
+  \ifnumcomp{\value{listtotal}}{>}{2} % More than 2 authors
+    {\ifnumcomp{\value{listcount}}{=}{1} % Only print first author
+       {\namepartfamily%
+        \ifgiveninits
+          {\namepartgiveni}
+          {}%
+        \space et al.}%
+       {}} % Stop after first author
+    {\ifnumcomp{\value{listtotal}}{=}{2} % Exactly 2 authors
+       {\namepartfamily%
+        \ifgiveninits
+          {\namepartgiveni}
+          {}%
+        \ifnumcomp{\value{listcount}}{=}{1} % Add "&" before second author
+          {\space\&\space}
+          {}}%
+       {\namepartfamily% Single author case
+        \ifgiveninits
+          {\namepartgiveni}
+          {}}}%
+  \ifmorenames{\relax}{\relax}}
