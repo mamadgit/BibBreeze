@@ -2,7 +2,7 @@
 This Markdown file provides descriptions of the reasons behind code implementations in various branches, including the main branch. For sections of code that require manual setup, this document will offer precise instructions on what to do.
 
 ## Main Branch
-**Standard APA style**: The code allows for the APA style to be used with `numeric` in-text citations and the a `authoryear` version.
+**Standard APA style**: The code allows for the APA style to be used with `numeric` in-text citations and the `authoryear` version.
 
 **Instructions**:
 
