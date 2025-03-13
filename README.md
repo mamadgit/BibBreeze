@@ -5,7 +5,7 @@ A LaTeX template for the APA-style referencing (`author-year` and `numeric` in-t
 For information regarding the details and purpose of the branches of this repository, please read the `Instructions-Descriptions.md` markdown file. Also, to see the output and capabilities of this package please look at the `APA-Custom_LaTeX-Template.pdf` as an example.
 
 ## Introduction
-This LaTeX template, written using BibLaTeX, provides a reliable solution for APA-style referencing (7th edition), a format required by some academic journals. Designed for researchers, students, and academics, it ensures strict adherence to APA standards while significantly reducing manual effort through intelligent automation regarding unorganised bibliography data. It is compatible with MikTeX installations for Windows users, as well as other LaTeX distributions.
+This LaTeX template, written using BibLaTeX, provides a reliable solution for APA-style referencing (7th edition), whilst supporting `numeric` in-text citations, a format required by some academic journals. Designed for researchers, students, and academics, it ensures strict adherence to APA standards while significantly reducing manual effort through intelligent automation regarding unorganised bibliography data. It is compatible with MikTeX installations for Windows users, as well as other LaTeX distributions.
 
 ## Key Features
 - **Full APA 7th Edition Compliance**: Accurately implements all guidelines of the APA 7th edition for various entry types such as articles, books, conferences (session and proceedings), and theses (PhD and masters).
@@ -13,7 +13,7 @@ This LaTeX template, written using BibLaTeX, provides a reliable solution for AP
 - **Advanced Automation**: Includes an algorithm that parses and extracts citation data from `.bib` files, automating the handling of incomplete or misstructured entries:
   - Extracts and formats conference details (e.g., title, location, date) embedded in fields like `booktitle`.
   - Correctly places extracted data in the appropriate fields, minimizing manual editing.
-- **Designed for Academic Use**: Tailored for journals requiring numeric APA citations, offering a time-saving solution for academic writing.
+- **Designed for Academic Use**: Tailored for journals requiring APA referencing with `numeric` in-text citation, offering a time-saving solution for academic writing.
   - **Note:** Users wishing to use the standard APA style can do so with a few simple modifications, as explained in the `.tex` file.
 - **Seamless Integration**: Works effortlessly with LaTeX projects using BibLaTeX.
 
