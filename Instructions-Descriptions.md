@@ -16,7 +16,7 @@ For MikTeX users:
      
    - Or if you'd prefer another method:
      Copy the contents of `APA-Custom-Template.cbx` into the default `authoryear.cbx` right after line 8 (`\newbool{cbx:parens}`).
-2. In the `APA-Custom-Template.tex` file, set the `citestyle` of the `documentclass` to `authoryear`.
+2. In the `APA-Custom-Template.tex` file, set the `citestyle` of the `biblatex` package to `authoryear`.
 3. In the `APA-custom-Template.bbx` file, set the `numeric` of `RequireBibliographyStyle` as `authoryear`.
 
 ## Customising-BibLaTeX's.def-file branch
