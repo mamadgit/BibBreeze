@@ -15,12 +15,12 @@ For MikTeX users:
        Here, `[Your Username]` represents your actual Windows username.
      
    - Or if you'd prefer another method:
-     Copy the contents of `APA-Custom-Template.cbx` into the default `authoryear.cbx` right after line 8 (`\newbool{cbx:parens}`).
-2. In the `APA-Custom-Template.tex` file, set the `citestyle` of the `biblatex` package to `authoryear`.
-3. In the `APA-custom-Template.bbx` file, set the `numeric` of `RequireBibliographyStyle` as `authoryear`.
+     Copy the contents of `BibBreeze.cbx` into the default `authoryear.cbx` right after line 8 (`\newbool{cbx:parens}`).
+2. In the `BibBreeze.tex` file, set the `citestyle` of the `biblatex` package to `authoryear`.
+3. In the `BibBreeze.bbx` file, set the `numeric` of `RequireBibliographyStyle` as `authoryear`.
 
 ## Customising-BibLaTeX's.def-file branch
-Building the project requires a `.def` file. The purpose of this branch is to use the default (source) `biblatex.def` but modify it by integrating the contents of `APA-Custom-Template.def`. This is a temporary measure until I can decide which sections I require for my `APA-Custom-Template.def` file. Once decided, I will load the `APA-Custom-Template.def` in the `.tex` file and use it instead.
+Building the project requires a `.def` file. The purpose of this branch is to use the default (source) `biblatex.def` but modify it by integrating the contents of `BibBreeze.def`. This is a temporary measure until I can decide which sections I require for my `BibBreeze.def` file. Once decided, I will load the `BibBreeze.def` in the `BibBreeze.tex` file and use it instead.
 
 **Instructions**:
 
@@ -37,7 +37,7 @@ Locate the default `biblatex.def` in your installation path and replace it with 
      
 Or if you'd prefer another method:
 
-Copy the contents of `APA-Custom-Template.def` **from line 5 to line 16**. Locate the original `biblatex.def` in your installation path and add the copied content to the macro `DeclareDriverSourccemap` on **line 1339**.
+Copy the contents of `BibBreeze.def` **from line 5 to line 16**. Locate the original `biblatex.def` in your installation path and add the copied content to the macro `DeclareDriverSourccemap` on **line 1339**.
 Remember, modifying system files like `biblatex.def` can affect other LaTeX documents you work on, so backup your current `biblatex.def` before making changes.
 
 ## Detailed-Explanation-of-Code branch
