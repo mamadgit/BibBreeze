@@ -4,7 +4,7 @@
 For information regarding the details and purpose of the branches of this repository, please read the `Instructions-Descriptions.md` markdown file. Also, to see the output and capabilities of this package please look at the `BibBreeze.pdf` as an example.
 
 ## Introduction
-This LaTeX package, called `BibBreeze` written using BibLaTeX, is a referencing package that automates bibliography reconstruction, eliminating manual effort in reference handling. It reorders disorganized fields for bibliography entries, fills in missing fields, and produces polished, referencing style-compliant bibliographies—optimized for researchers, academics, and writers. Currently, the package's referencing style is designed for APA (with both `numeric` and `author-year` in-text citations) with more styles (Harvard, Chicago, AMA, etc.) to come.
+This LaTeX package, called `BibBreeze` written using LaTeX3, is a referencing package that automates bibliography reconstruction, eliminating manual effort in reference handling. It reorders disorganized fields for bibliography entries, fills in missing fields, and produces polished, referencing style-compliant bibliographies—optimized for researchers, academics, and writers. Currently, the package's referencing style is designed for APA (with both `numeric` and `author-year` in-text citations) with more styles (Harvard, Chicago, AMA, etc.) to come.
 ## Key Features
 
 - **Advanced Automation**: Leverage algorithms that parse through bibliography data from `.bib` files, to automate the handling of incomplete or misstructured entries:
