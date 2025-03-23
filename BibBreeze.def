@@ -1,4 +1,4 @@
-\ProvidesFile{APA-Custom-Template.def}[2023/02/11 v1.0 Custom biblatex mappings]
+\ProvidesFile{BibBreeze.def}
 
 \DeclareDriverSourcemap[datatype=bibtex]
 {
