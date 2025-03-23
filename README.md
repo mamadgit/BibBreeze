@@ -8,7 +8,7 @@ This LaTeX package, called `BibBreeze` written using `LaTeX3`, is a referencing 
 ## Key Features
 
 - **Advanced Automation**: Leverage algorithms that parse through bibliography data from `.bib` files, to automate the handling of incomplete or misstructured entries:
-  - Reorganises embedded entry fields, such as a `booktitle` field in conference proceedings entry that may combine the conference title, location, and date, into their proper structure.
+  - Reorganises embedded entry fields, such as a `booktitle` field in conference proceedings entry that may combine the conference title, location, and date, and distributes them into their proper structure.
   - Differentiates between subtypes of entries sharing a single BibTeX key (e.g., `@inproceedings`), such as presented conference proceedings versus those published in books or journals.
   - Embeds actionable prompts directly in the bibliography output, providing instructions for manual edits when automated fixes aren’t sufficient.
 - **Designed for Academic Use**: Also tailored for journals requiring APA referencing with `numeric` in-text citation, offering a time-saving solution for academic writing.
