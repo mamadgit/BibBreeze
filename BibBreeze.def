@@ -17,7 +17,8 @@
 
 %Modified by [Amir Mohammad Tahsiri], 2025
 %Contact: https://github.com/mamadgit/BibBreeze
-%Modifications: Modified so the package can recognise specific bibliography field entries with different names (lines 1391-1401).
+%Modifications: Modified so the package can recognise specific bibliography field entries with different names (lines 1392-1402).
+% This work consists of the files BibBreeze.tex, BibBreeze.bbx, BibBreeze-authoryear.cbx, BibBreeze.dbx, BibBreeze.bib, BibBreeze.def, Instructions-Descriptions.md, README.md and the derived file LICENSE.txt.
 
 \ProvidesFile{BibBreeze.def}[version 1.0]
 [\abx@cptid]
