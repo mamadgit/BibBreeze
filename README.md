@@ -12,9 +12,9 @@ and version 1.3c or later is part of all distributions of LaTeX
 version 2008 or later.
 This work has the LPPL maintenance status `maintained'.
 The Current Maintainer of this work is Amir Mohammad Tahsiri.
-% This work consists of the files BibBreeze.tex, BibBreeze.bbx, BibBreeze-authoryear.cbx, BibBreeze.dbx, BibBreeze.bib, BibBreeze.def, Instructions-Descriptions.md, README.md and the derived file LICENSE.txt.
+% This work consists of the files BibBreeze.tex, BibBreeze.bbx, BibBreeze-authoryear.cbx, BibBreeze.dbx, BibBreeze.bib, BibBreeze.def (all version 1.0), Instructions-Descriptions.md, README.md and the derived file LICENSE.txt.
 
-Modified Files: The 'BiBreeze-authoryear.cbx' is a modified version of 'authoryear.cbx' from BibLaTeX and .
+Modified Files: The 'BiBreeze-authoryear.cbx' is a modified version of 'authoryear.cbx' from BibLaTeX and 'BibBreeze.def' is a modified version of 'biblatex.def'.
 Copyright (c) 2006-2011 Philipp Lehman.
               2012-2017 Philip Kime, Audrey Boruvka, Joseph Wright
               2018- Philip Kime, Moritz Wemheuer

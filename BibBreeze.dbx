@@ -21,6 +21,8 @@
   
   %The command Declare data model is used to declare new fields of entries that havent been defined for BibLaTeX. Here the type is identified which can be name, field, list, etc. Its type is then identified and finally the field of the entry
 
+  \ProvidesFile{BibBreeze.dbx}[version 1.0]
+
   \DeclareDatamodelFields[type=field, datatype=literal]{bibsource}
   \DeclareDatamodelFields[type=field, datatype=literal]{biburl}
   \DeclareDatamodelFields[type=field, datatype=literal]{publicationnumber}
