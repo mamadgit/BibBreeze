@@ -1,3 +1,24 @@
+<!--  
+Author: Amir Mohammad Tahsiri
+Contact: https://github.com/mamadgit/BibBreeze
+
+Licence: Copyright 2025 Amir Mohammad Tahsiri
+This work may be distributed and/or modified under the
+conditions of the LaTeX Project Public License, either version 1.3c
+of this license or (at your option) any later version.
+The latest version of this license is in
+https://www.latex-project.org/lppl.txt
+and version 1.3c or later is part of all distributions of LaTeX
+version 2008 or later.
+This work has the LPPL maintenance status `maintained'.
+The Current Maintainer of this work is Amir Mohammad Tahsiri.
+% This work consists of the files BibBreeze.tex, BibBreeze.bbx, BibBreeze-authoryear.cbx, BibBreeze.dbx, BibBreeze.bib, BibBreeze.def, Instructions-Descriptions.md, README.md and the derived file LICENSE.txt.
+
+Modified Files: The 'BiBreeze-authoryear.cbx' is a modified version of 'authoryear.cbx' from BibLaTeX and .
+Copyright (c) 2006-2011 Philipp Lehman.
+              2012-2017 Philip Kime, Audrey Boruvka, Joseph Wright
+              2018- Philip Kime, Moritz Wemheuer
+-->
 # BibBreeze: A Referencing Package that Automates Bibliography Reconstruction
 
 ## Note
@@ -38,4 +59,5 @@ This LaTeX package, called `BibBreeze` written using `LaTeX3`, is a referencing 
 3. Compile your document using a LaTeX editor (e.g., Overleaf, TeXShop) with BibLaTeX enabled.
 
 ## Contributing and Feedback
-This project is open to contributions! If you have suggestions, bug reports, or feature requests, please open an issue or submit a pull request. Feel free to star this repository if you find it useful!
+  - For bug report or questions, please open an issue in the [Issues tab](https://github.com/mamadgit/BibBreeze/issues).
+  - For general discussions, check out the [Discussions tab](https://github.com/mamadgit/BibBreeze/discussions).
