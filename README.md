@@ -53,10 +53,8 @@ This LaTeX package, called `BibBreeze` written using `LaTeX3`, is a referencing 
 
 ## Installation and Setup
 1. Clone this repository: https://github.com/mamadgit/BibBreeze.git
-2. Include the template in your LaTeX project:
-- Add the provided `.bbx` and `.dbx` files to your project directory.
-- Configure BibLaTeX to use this style in your `.tex` file (according to the `.tex` provided).
-3. Compile your document using a LaTeX editor (e.g., Overleaf, TeXShop) with BibLaTeX enabled.
+2. Configure BibLaTeX to use your preferred style in the `BibBreeze.tex` file.
+3. Compile your document using a LaTeX editor (e.g., Overleaf, TeXShop, MikTeX, etc.) with BibLaTeX enabled.
 
 ## Contributing and Feedback
   - For bug report or questions, please open an issue in the [Issues tab](https://github.com/mamadgit/BibBreeze/issues).
