@@ -248,144 +248,144 @@
 
 \ExplSyntaxOn% This function is written using commands from the expl3 package and requires loading its own enviornment
 % Declare variables
-\seq_new:N \l_my_input_seq         % Sequence for input items
-\tl_new:N \l_my_input_tl           % Token list for input string  
-\tl_new:N \l_my_item_tl            % Token list for current item  
-\tl_new:N \g_my_date_tl            % Token list for date  
-\tl_new:N \g_my_location_tl        % Token list for storing location parameters
-\tl_new:N \g_my_title_tl           % Token list for title  
-\seq_new:N \l_my_location_list_seq      % Sequence for location  
-\int_new:N \l_my_counter_int       % Integer variable as a counter
-\bool_new:N \l_my_continue_bool    % Boolean for while loop  
-\bool_new:N \l_my_nested_loop_bool % Boolean while loop for putting items in location sequence
+\seq_new:N \l__bibbreeze_input_seq          %Internal sequence for input items
+\tl_new:N \l__bibbreeze_input_tl            %Internal token list for input string  
+\tl_new:N \l__bibbreeze_item_tl             %Internal token list for current item 
+\seq_new:N \l__bibbreeze_location_list_seq  %Internal sequence for location  
+\int_new:N \l__bibbreeze_counter_int        %Internal integer variable as a counter
+\bool_new:N \l__bibbreeze_continue_bool     %Internal boolean for main loop  
+\bool_new:N \l__bibbreeze_nestedloop_bool   %Internal boolean loop for putting items in location sequence 
+\tl_new:N \g_bibbreeze_date_tl              %Public token list for date  
+\tl_new:N \g_bibbreeze_location_tl          %Public token list for storing location parameters
+\tl_new:N \g_bibbreeze_title_tl             %Public token list for title  
 
 % Define the macro  
 
 %%%%%%%The algorithm for extracting field information bundeled in another field
 \NewDocumentCommand{\ExtractFieldInfo}{m}
 {
-  \tl_set:Nx \l_my_input_tl {\expandafter\use:n{#1}}%Use \expandafter to acsses the characters of the input variable. Also use \tl_set:Nx to expand l_my_input_tl before passing to function.
-  \seq_set_split:NnV \l_my_input_seq {,} \l_my_input_tl %Split the list into items based on commas
-  \seq_log:N \l_my_input_seq %Check the log file for output of l_my_input_seq
+  \tl_set:Ne \l__bibbreeze_input_tl {#1}%Use \Ne to expand to acsses the characters of the input variable. Also use \tl_set:Ne to expand l_my_input_tl before passing to function.
+  \seq_set_split:NnV \l__bibbreeze_input_seq {,} \l__bibbreeze_input_tl %Split the list into items based on commas
+  \seq_log:N \l__bibbreeze_input_seq %Check the log file for output of l_my_input_seq
 
-  \bool_set_true:N \l_my_continue_bool
+  \bool_set_true:N \l__bibbreeze_continue_bool
   %Set title, location and date as global tokens instead of local to acesses them outside ExtractFieldInfo
-  \tl_gset:Nn \g_my_title_tl {} 
-  \tl_gset:Nn \g_my_location_tl {}
-  \tl_gset:Nn \g_my_date_tl {}
+  \tl_gset:Nn \g_bibbreeze_title_tl {} 
+  \tl_gset:Nn \g_bibbreeze_location_tl {}
+  \tl_gset:Nn \g_bibbreeze_date_tl {}
 
-  \bool_while_do:Nn \l_my_continue_bool
+  \bool_while_do:Nn \l__bibbreeze_continue_bool
   {
     %Get the first item in case it matches the first regex, as popping it would require insearting it again.
-    \seq_get_right:NN \l_my_input_seq \l_my_item_tl
+    \seq_get_right:NN \l__bibbreeze_input_seq \l__bibbreeze_item_tl
     %Trim spaces in case of spaces before or after the item
-    \tl_trim_spaces:N \l_my_item_tl
+    \tl_trim_spaces:N \l__bibbreeze_item_tl
 
-    \regex_match:nVTF {.\d{4}\Z} \l_my_item_tl
+    \regex_match:nVTF {.\d{4}\Z} \l__bibbreeze_item_tl
     {
       % Last item matches four digits at the end of the string
-      \seq_pop_right:NN \l_my_input_seq \l_my_item_tl
-      \tl_set:Nx \l_my_parenthesized_item_tl {( \l_my_item_tl )}
+      \seq_pop_right:NN \l__bibbreeze_input_seq \l__bibbreeze_item_tl
+      \tl_set:Ne \l_my_parenthesized_item_tl {( \l__bibbreeze_item_tl )}
       
       % Construct title with consistent formatting
-      \tl_gset:Nx \g_my_title_tl {
-        \seq_use:Nn \l_my_input_seq {,~}
+      \tl_gset:Ne \g_bibbreeze_title_tl {
+        \seq_use:Nn \l__bibbreeze_input_seq {,~}
         \c_space_tl \l_my_parenthesized_item_tl
       }
-      \tl_log:N \g_my_title_tl
-      \bool_set_false:N \l_my_continue_bool % Exit loop since we've handled the year
+      \tl_log:N \g_bibbreeze_title_tl
+      \bool_set_false:N \l__bibbreeze_continue_bool % Exit loop since we've handled the year
     }
     {
       % If the last item doesn't match, we proceed with other checks
-      \seq_pop_right:NN \l_my_input_seq \l_my_item_tl
-      \tl_trim_spaces:N \l_my_item_tl
+      \seq_pop_right:NN \l__bibbreeze_input_seq \l__bibbreeze_item_tl
+      \tl_trim_spaces:N \l__bibbreeze_item_tl
 
-      \tl_if_eq:nVT {Proceedings} \l_my_item_tl
+      \tl_if_eq:nVT {Proceedings} \l__bibbreeze_item_tl
       {
         % If it is Proceedings, pop the next item
-        \seq_pop_right:NN \l_my_input_seq \l_my_item_tl
-        \tl_trim_spaces:N \l_my_item_tl
+        \seq_pop_right:NN \l__bibbreeze_input_seq \l__bibbreeze_item_tl
+        \tl_trim_spaces:N \l__bibbreeze_item_tl
       }
 
-      \regex_match:nVTF { ^\d{4} } \l_my_item_tl
+      \regex_match:nVTF { ^\d{4} } \l__bibbreeze_item_tl
       {
         % If it is a four-digit number, treat it as a year
-        %\tl_set:Nx \l_my_date_tl {\l_my_item_tl}
-        \seq_pop_right:NN \l_my_input_seq \l_my_item_tl
-        \tl_trim_spaces:N \l_my_item_tl
+        %\tl_set:Ne \l_my_date_tl {\l__bibbreeze_item_tl}
+        \seq_pop_right:NN \l__bibbreeze_input_seq \l__bibbreeze_item_tl
+        \tl_trim_spaces:N \l__bibbreeze_item_tl
         
         % Check if the next item is a month
-        \regex_match:nVT { ^(J|F|Mar|A|May|Jun|Jul|Aug|S|O|N|D) } \l_my_item_tl % High probability of month for \l_my_item_tl at this stage; minimal check is sufficent
+        \regex_match:nVT { ^(J|F|Mar|A|May|Jun|Jul|Aug|S|O|N|D) } \l__bibbreeze_item_tl % High probability of month for \l__bibbreeze_item_tl at this stage; minimal check is sufficent
         {
-          \tl_gset:Nx \g_my_date_tl {\l_my_item_tl}
-          \seq_pop_right:NN \l_my_input_seq \l_my_item_tl
-          \tl_trim_spaces:N \l_my_item_tl
-          \seq_put_left:Nx \l_my_location_list_seq {\l_my_item_tl}
+          \tl_gset:Ne \g_bibbreeze_date_tl {\l__bibbreeze_item_tl}
+          \seq_pop_right:NN \l__bibbreeze_input_seq \l__bibbreeze_item_tl
+          \tl_trim_spaces:N \l__bibbreeze_item_tl
+          \seq_put_left:Ne \l__bibbreeze_location_list_seq {\l__bibbreeze_item_tl}
         }
         % Determine location item count based on whether "USA" is present
-        \tl_if_eq:nVTF { USA } {\l_my_item_tl}
+        \tl_if_eq:nVTF { USA } {\l__bibbreeze_item_tl}
         {
           %If USA pop out the next two items
-          \int_set:Nn \l_my_counter_int {2}
+          \int_set:Nn \l__bibbreeze_counter_int {2}
         }
         {
           %If not USA pop out only the next item
-          \int_set:Nn \l_my_counter_int {1}
+          \int_set:Nn \l__bibbreeze_counter_int {1}
         }
         %Use another while loop for handeling the location items
-        \bool_set_true:N \l_my_nested_loop_bool
-        \bool_while_do:Nn \l_my_nested_loop_bool
+        \bool_set_true:N \l__bibbreeze_nestedloop_bool
+        \bool_while_do:Nn \l__bibbreeze_nestedloop_bool
         {
-          \int_compare:nTF {\l_my_counter_int > 0}
+          \int_compare:nTF {\l__bibbreeze_counter_int > 0}
           {
-            \seq_if_empty:NF \l_my_input_seq
+            \seq_if_empty:NF \l__bibbreeze_input_seq
             {
-              \seq_pop_right:NN \l_my_input_seq \l_my_item_tl
-              \tl_log:N \l_my_item_tl
+              \seq_pop_right:NN \l__bibbreeze_input_seq \l__bibbreeze_item_tl
+              \tl_log:N \l__bibbreeze_item_tl
               %Store popped locations in a new variable from left to right
-              \seq_put_left:Nx \l_my_location_list_seq {\l_my_item_tl}
-              \tl_trim_spaces:N \l_my_item_tl
-              \int_decr:N \l_my_counter_int
+              \seq_put_left:Ne \l__bibbreeze_location_list_seq {\l__bibbreeze_item_tl}
+              \tl_trim_spaces:N \l__bibbreeze_item_tl
+              \int_decr:N \l__bibbreeze_counter_int
             }
             %Specifically indiate that if counter hits zero, exit the loop
-            \int_compare:nT {\l_my_counter_int == 0}
+            \int_compare:nT {\l__bibbreeze_counter_int == 0}
             {
-              \bool_set_false:N \l_my_nested_loop_bool
+              \bool_set_false:N \l__bibbreeze_nestedloop_bool
             }
           }
           {
-            \bool_set_false:N \l_my_nested_loop_bool
+            \bool_set_false:N \l__bibbreeze_nestedloop_bool
           }
         }
-        \seq_log:N \l_my_location_list_seq
+        \seq_log:N \l__bibbreeze_location_list_seq
         %After extracting the location set in new variable 
-        \tl_gset:Nx \g_my_location_tl { \seq_use:Nn \l_my_location_list_seq {,~} }
+        \tl_gset:Ne \g_bibbreeze_location_tl {\seq_use:Nn \l__bibbreeze_location_list_seq {,~}}
 
         % After handling location, check for the year again
-        \seq_if_empty:NF \l_my_input_seq
+        \seq_if_empty:NF \l__bibbreeze_input_seq
         {
-          \bool_set_true:N \l_my_continue_bool
+          \bool_set_true:N \l__bibbreeze_continue_bool
         }
         {
-          \bool_set_false:N \l_my_continue_bool
+          \bool_set_false:N \l__bibbreeze_continue_bool
         }
       }
       {
         % If no special conditions are met, add to title or check if we're done
-        \tl_if_empty:NF \g_my_title_tl
+        \tl_if_empty:NF \g_bibbreeze_title_tl
         {
-          \tl_gput_left:Nn \g_my_title_tl {,~} % Add comma and space only if title is not empty
+          \tl_gput_left:Nn \g_bibbreeze_title_tl {,~} % Add comma and space only if title is not empty
         }
         %Set comma right-seperated items of title from left in g_my_title_tl
-        \tl_gput_left:Nx \g_my_title_tl {\l_my_item_tl}
-        \seq_if_empty:NTF \l_my_input_seq
+        \tl_gput_left:Ne \g_bibbreeze_title_tl {\l__bibbreeze_item_tl}
+        \seq_if_empty:NTF \l__bibbreeze_input_seq
         {
           % Remove the last comma if this was the last item
           %\tl_remove_trailing:Nn \l_my_title_tl {,}
-          \bool_set_false:N \l_my_continue_bool
+          \bool_set_false:N \l__bibbreeze_continue_bool
         }
         {
-          \bool_set_true:N \l_my_continue_bool
+          \bool_set_true:N \l__bibbreeze_continue_bool
         }
       }
     }
@@ -394,62 +394,57 @@
 %Define new commands for making the title, location and date available for printing
 \NewDocumentCommand{\PrintDatetl}{}
 {
-  \tl_if_empty:NF \g_my_date_tl
+  \tl_if_empty:NF \g_bibbreeze_date_tl
     {
       \addspace
-      \tl_use:N \g_my_date_tl
-      \tl_log:N \g_my_date_tl
+      \tl_use:N \g_bibbreeze_date_tl
+      \tl_log:N \g_bibbreeze_date_tl
     }
 }
 \NewDocumentCommand{\PrintLocationtl}{}
 {
-  \tl_if_empty:NF \g_my_location_tl
+  \tl_if_empty:NF \g_bibbreeze_location_tl
     {
       \addspace
       \ifnameundef{editor}
-      {\tl_use:N \g_my_location_tl}
+      {\tl_use:N \g_bibbreeze_location_tl}
       {}
-      \tl_log:N \g_my_location_tl
+      \tl_log:N \g_bibbreeze_location_tl
     }
 }
 \NewDocumentCommand{\PrintTitletl}{}
 {
-  \tl_if_empty:NF \g_my_title_tl
+  \tl_if_empty:NF \g_bibbreeze_title_tl
     {
       \addspace
       \ifboolexpr{
         test {\ifnameundef{editor}} and test {\iffieldundef{isbn}}% The isbn is included when a proceedings paper in an edited book lacks an editor field.
       }
-        {\tl_use:N \g_my_title_tl}
-        {\textit{\tl_use:N \g_my_title_tl}}
+        {\tl_use:N \g_bibbreeze_title_tl}
+        {\textit{\tl_use:N \g_bibbreeze_title_tl}}
     }
 }
 
 \cs_new_protected:Npn \ExtractURLInfo #1#2#3#4
 {
-  % Set biburl string
-  \str_set:Nx \l_url_str {#1}
-  \tl_log:N \l_url_str
-  % Split the biburl into segments
-  \seq_set_split:NnV \l_segments_seq {/} {\l_url_str}
-  \seq_log:N \l_segments_seq
-  % Initialize the found boolean
-  \bool_set_false:N \l_found_bool
-  % Map through each segment of the biburl
-  \seq_map_inline:Nn \l_segments_seq
+  \str_set:Ne \l__bibbreeze_url_str {#1}
+  \tl_log:N \l__bibbreeze_url_str
+  \seq_set_split:NnV \l__bibbreeze_segments_seq {/} \l__bibbreeze_url_str
+  \seq_log:N \l__bibbreeze_segments_seq
+  \bool_set_false:N \l__bibbreeze_found_bool
+  \seq_map_inline:Nn \l__bibbreeze_segments_seq
   {
     \regex_match:nnTF {^#2\Z} {##1}
     {
-      \bool_set_true:N \l_found_bool
+      \bool_set_true:N \l__bibbreeze_found_bool
       \tl_log:n { Found~#2~in~segment:~##1 }
       \seq_map_break:
     }
-    {}% If regex not found, do nothing
+    {}
   }
-  % Execute the appropriate code based on whether the segment was found
-  \bool_if:NTF \l_found_bool
-  {#3}% If segment found, execute #3
-  {#4}% If not found, execute #4
+  \bool_if:NTF \l__bibbreeze_found_bool
+  {#3}
+  {#4}
 }
 \ExplSyntaxOff
 
@@ -564,13 +559,9 @@
 \DeclareIndexFieldFormat[thesis]{number}{(Publication No.\space #1)}
 
 \ExplSyntaxOn
-\NewDocumentCommand{\PopOneItem}{m}% A general function for extracting only the first item of a list
+\NewDocumentCommand \PopOneItem { m }
 {
-  \tl_set:Nx \l_tmpa_tl {\expandafter\use:n{#1}}
-  \seq_set_split:NnV \l_tmpa_seq {,} \l_tmpa_tl
-  \seq_pop_left:NN \l_tmpa_seq \l_tmpa_tl
-  \tl_trim_spaces:N \l_tmpa_tl
-  \tl_use:N \l_tmpa_tl
+  \clist_item:en {#1} {1}
 }% Function also works for a list with only one item as there's nothing to split and the item is places in l_tmpa_tl
 \ExplSyntaxOff
 
