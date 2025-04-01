@@ -520,7 +520,7 @@
         {% If "journals" not found, it's definetly a session
           \printnames{author}%  
           \setunit{\addspace}\newblock% Use \addspace instead of \labelnamepunct to control spacing
-          \printfield{year}% 
+          \printfield{year}\adddot% 
           \setunit{\addspace}\newblock% 
           \printfield{title}% 
           \setunit{\addspace}\newblock%
