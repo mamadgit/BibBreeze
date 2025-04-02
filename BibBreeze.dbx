@@ -28,6 +28,7 @@
   \DeclareDatamodelFields[type=field, datatype=literal]{publicationnumber}
   \DeclareDatamodelFields[type=field, datatype=literal]{location}
   \DeclareDatamodelFields[type=field, datatype=literal]{date}
+  \DeclareDatamodelFields[type=field, datatype=literal]{articlenumber}
   \DeclareDatamodelEntryfields{publicationnumber}
   \DeclareDatamodelEntryfields[inproceedings]{location}
   \DeclareDatamodelEntryfields[inproceedings]{date}

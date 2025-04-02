@@ -171,8 +171,10 @@
   \setunit{\addcomma\addspace}  
   \printfield{volume}%  
   \printfield{number}%  
-  \setunit{\addcomma\addspace}  
-  \printfield{pages}%
+  \setunit{\addcomma\addspace}
+  \iffieldundef{pages}%
+  {\printfield{articlenumber}}%
+  {\printfield{pages}}%  
   \adddot%  
   \printfield{doi}%
 }%  
