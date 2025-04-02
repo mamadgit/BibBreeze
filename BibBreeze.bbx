@@ -325,7 +325,7 @@
           \seq_put_left:Ne \l__bibbreeze_location_list_seq {\l__bibbreeze_item_tl}
         }
         % Determine location item count based on whether "USA" is present
-        \regex_match:nVT { (?i)^(usa|can|rus|bra|aus) }\l__bibbreeze_item_tl
+        \regex_match:nVT { (?i)^(usa|can|rus|bra|aus|ind) }\l__bibbreeze_item_tl
         {
           %If USA pop out the next two items
           \int_set:Nn \l__bibbreeze_counter_int {2}
