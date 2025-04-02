@@ -325,7 +325,7 @@
           \seq_put_left:Ne \l__bibbreeze_location_list_seq {\l__bibbreeze_item_tl}
         }
         % Determine location item count based on whether "USA" is present
-        \tl_if_eq:nVTF { USA } {\l__bibbreeze_item_tl}
+        \regex_match:nVT { ^(USA| Can| Rus| Bra | Aus) }\l__bibbreeze_item_tl
         {
           %If USA pop out the next two items
           \int_set:Nn \l__bibbreeze_counter_int {2}
@@ -528,7 +528,7 @@
           \setunit{\addspace}\newblock%
           \printtext{[Paper presentation]\adddot\space}% Add \space to ensure consistent spacing
           \PrintTitletl\addcomma\space%
-          \PrintLocationtl\adddot\space%
+          \PrintLocationtl\adddot%
           \printfield{doi}%
         }%
       }%
